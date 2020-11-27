@@ -8,11 +8,13 @@
 (defn byte-array? [obj] (instance? byte-array-class obj))
 (defn input-stream? [obj] (instance? java.io.InputStream obj))
 
+(s/def ::input-stream (s/spec input-stream? :gen #(->> (byte-array 0)
+                                                       (io/input-stream)
+                                                       (gen/return))))
+
 (s/def ::digest-fn
   (s/fspec
-   :args (s/cat :input-stream (s/spec input-stream? :gen #(->> (byte-array 0)
-                                                               (io/input-stream)
-                                                               (gen/return))))
+   :args (s/cat :input-stream ::input-stream)
    :ret byte-array?))
 
 (s/fdef valuehash.api/digest
