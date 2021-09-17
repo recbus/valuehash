@@ -1,6 +1,9 @@
 (ns valuehash.impl
   "Simple implementation based on plain byte arrays"
-  (:import [java.util UUID Date]))
+  (:import (java.util UUID Date)
+           (java.math BigDecimal BigInteger)))
+
+(set! *warn-on-reflection* true)
 
 (defprotocol CanonicalByteArray
   "An object that can be converted to a canonical byte array, with value
@@ -64,6 +67,12 @@
   (to-byte-array [this] (long->bytes (Double/doubleToLongBits this)))
   clojure.lang.Ratio
   (to-byte-array [this] (long->bytes (Double/doubleToLongBits (double this))))
+  clojure.lang.BigInt
+  (to-byte-array [this] (.toByteArray (.toBigInteger this)))
+  BigInteger
+  (to-byte-array [this] (.toByteArray this))
+  BigDecimal
+  (to-byte-array [this] (long->bytes (Double/doubleToLongBits (double this))))
   Boolean
   (to-byte-array [this] (byte-array 1 (if this (byte 1) (byte 0))))
   Character
@@ -73,8 +82,7 @@
     (join-byte-arrays [(long->bytes (.getMostSignificantBits ^UUID this))
                        (long->bytes (.getLeastSignificantBits ^UUID this))]))
   Date
-  (to-byte-array [this]
-    (long->bytes (.getTime this))))
+  (to-byte-array [this] (long->bytes (.getTime this))))
 
 (def list-sep (byte-array 1 (byte 42)))
 (def set-sep (byte-array 1 (byte 21)))
@@ -82,8 +90,8 @@
 
 (defn- map-entry->byte-array
   [map-entry]
-  (join-byte-arrays [(to-byte-array (.getKey map-entry))
-                     (to-byte-array (.getValue map-entry))]))
+  (join-byte-arrays [(to-byte-array (key map-entry))
+                     (to-byte-array (val map-entry))]))
 
 ;; Collections
 (extend-protocol CanonicalByteArray

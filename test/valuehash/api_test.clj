@@ -2,8 +2,7 @@
   (:require [clojure.test.check.generators :as gen]
             [clojure.test.check.properties :as prop]
             [clojure.test.check.clojure-test :refer [defspec]]
-            [valuehash.api :as api]
-            ))
+            [valuehash.api :as api]))
 
 (defprotocol Perturbable
   "A value that can be converted to a value of a different type, but stil be equal"

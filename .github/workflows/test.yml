@@ -1,0 +1,32 @@
+name: Run tests
+
+on: push
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/setup-java@v2
+      with:
+        distribution: 'zulu'
+        java-version: '8'
+
+    - uses: DeLaGuardo/setup-clojure@3.5
+      with:
+        tools-deps: latest
+
+    - uses: actions/checkout@v2
+
+    - name: Cache clojure dependencies
+      uses: actions/cache@v2
+      with:
+        path: |
+          ~/.m2/repository
+          ~/.gitlibs
+        key: clojure-${{ hashFiles('**/deps.edn') }}
+        restore-keys: "clojure-"
+
+    - name: Run tests
+      run: |
+        clojure -X:test
