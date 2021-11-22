@@ -1,0 +1,24 @@
+{:tasks {:requires ([clojure.edn :as edn])
+         test {:doc "Runs the tests"
+               :task (clojure "-X:test")}
+
+         jar {:doc "Builds the jar"
+              :task (clojure "-T:build jar")}
+
+         clojars {:doc "Deploys the jar to clojars"
+                  :task (clojure "-T:build deploy")}
+
+         tag {:doc "Tags release and pushes tag to Github."
+              :task (let [version (-> (slurp "resources/META-INF/nextjournal/valuehash/meta.edn")
+                                      edn/read-string
+                                      :version)
+                          tag (str "v" version)]
+                      (shell "git tag" tag)
+                      (shell "git push origin" tag))}
+
+         deploy {:doc "Deploys the jar to clojars"
+                 ;; ensure sequential order becauce tag reads from info.edn made
+                 ;; by build.clj
+                 :task (do (run 'clojars)
+                           (run 'tag))}}
+ :min-bb-version "0.5.1"}
