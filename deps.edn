@@ -1,8 +1,8 @@
 {:paths ["src"]
  :aliases
- {:build {:deps {io.github.clojure/tools.build {:git/tag "v0.8.2" :git/sha "ba1a2bf421838802e7bdefc541b41f57582e53b6"}
+ {:build {:deps {io.github.clojure/tools.build {:git/tag "v0.8.3" :git/sha "0d20256c40b5a6b6adbcbdf7d0c52cf9e22e994d"}
                  io.github.slipset/deps-deploy {:git/sha "b87c9299761762984bd54a285ca8fa0aac81809f"}
-                 babashka/fs {:mvn/version "0.1.6"}}
+                 babashka/fs {:mvn/version "0.1.11"}}
           :ns-default build}
 
   :test {:extra-paths ["test"]
