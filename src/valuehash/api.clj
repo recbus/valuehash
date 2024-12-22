@@ -1,6 +1,5 @@
 (ns valuehash.api
-  (:require [valuehash.impl :as impl]
-            [valuehash.specs])
+  (:require [valuehash.impl :as impl])
   (:import [java.security MessageDigest]
            [java.io InputStream ByteArrayInputStream]))
 
